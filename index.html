@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Manjil Mart — Pure Products</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+      
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home" id="logo-link">
+        <img src="/mnt/data/WhatsApp Image 2025-11-13 at 00.21.22.jpeg" alt="Manjil logo" class="logo" />
+        <span class="brand-name">Manjil Mart</span>
+      </a>
+
+      <nav class="nav">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#products" class="nav-link">Products</a>
+        <a href="#login" class="nav-link" id="nav-login">Login</a>
+        <button class="cart-button" id="cart-btn" aria-label="Open cart">
+          Cart <span class="cart-count" id="cart-count">0</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+  <script src="script.js"></script>
+
+  <main class="container main-content">
+    <!-- HOME -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <div class="hero-text">
+          <h1>Pure, Fresh & Authentic Spices</h1>
+          <p>Hand-sourced, sun-dried, and packed with love. Explore premium powders & masalas from Manjil.</p>
+          <a href="#products" class="btn btn-primary">Shop Products</a>
+        </div>
+        <div class="hero-image">
+          <img src="/mnt/data/WhatsApp Image 2025-11-13 at 00.21.22.jpeg" alt="Brand visual" />
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feature-card">
+          <h3>Natural & Pure</h3>
+          <p>No additives. Straight from trusted farms.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Quality Packing</h3>
+          <p>Airtight & resealable for freshness.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Fast Delivery</h3>
+          <p>Secure shipping across regions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTS -->
+    <section id="products" class="page">
+      <div class="section-head">
+        <h2>Our Products</h2>
+        <p>High-quality spice powders curated for your kitchen.</p>
+      </div>
+
+      <div class="products-grid" id="products-grid">
+        <!-- Product cards inserted by JS -->
+      </div>
+    </section>
+
+    <!-- LOGIN -->
+    <section id="login" class="page">
+      <div class="form-card">
+        <h2>Login</h2>
+        <form id="login-form" class="login-form" autocomplete="off">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required placeholder="you@example.com" />
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" required minlength="6" placeholder="At least 6 characters" />
+          <button type="submit" class="btn btn-primary">Login</button>
+          <p class="muted">This is a frontend-only demo. Login is simulated locally.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- CART MODAL -->
+  <div id="cart-modal" class="cart-modal" aria-hidden="true">
+    <div class="cart-panel">
+      <header class="cart-header">
+        <h3>Your Cart</h3>
+        <button id="close-cart" class="close-btn" aria-label="Close cart">&times;</button>
+      </header>
+      <div class="cart-body" id="cart-items">
+        <!-- items populated by JS -->
+      </div>
+      <footer class="cart-footer">
+        <div class="cart-totals">
+          <span>Total:</span>
+          <strong id="cart-total">₹0.00</strong>
+        </div>
+        <div class="cart-actions">
+          <button id="clear-cart" class="btn">Clear</button>
+          <button id="checkout" class="btn btn-primary">Checkout</button>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="/mnt/data/WhatsApp Image 2025-11-13 at 00.21.22.jpeg" alt="Manjil logo" />
+        <span>Manjil Mart — Your journey to purity starts here</span>
+      </div>
+      <small>© <span id="year"></span> Manjil Mart. All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

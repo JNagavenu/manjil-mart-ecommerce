@@ -1,0 +1,2 @@
+# E-Commerce-Store-Flipkart-Style-Online-Shopping-Platform
+A full-stack e-commerce web application inspired by Flipkart, featuring complete product browsing, cart management, and secure checkout workflows. Built using Java and Spring Boot for backend REST APIs with a responsive frontend developed in HTML, CSS, and JavaScript. APIs were thoroughly tested using Postman to ensure reliability and security.
