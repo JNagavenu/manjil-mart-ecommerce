@@ -1,5 +1,8 @@
 # 🛒 Manjil Mart - E-Commerce Website
 
+## 🌍 Live Demo  
+👉 https://jnagavenu.github.io/manjil-mart-ecommerce/
+
 A responsive frontend e-commerce website featuring product browsing, cart management, and login simulation.
 
 ## 🚀 Features
