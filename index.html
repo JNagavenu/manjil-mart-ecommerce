@@ -19,6 +19,9 @@
     <nav class="nav">
       <a href="#home" class="nav-link">Home</a>
       <a href="#products" class="nav-link">Products</a>
+      <a href="#wishlist" class="nav-link">
+        Wishlist ❤️ <span id="wishlist-count">0</span>
+      </a>
       <a href="#login" class="nav-link">Login</a>
 
       <button id="cart-btn" class="cart-button">
@@ -30,62 +33,42 @@
 
 <main class="container main-content">
 
-  <!-- HOME -->
   <section id="home" class="page">
     <h1>Welcome to Manjil Mart</h1>
-    <p>Premium spice products delivered fresh.</p>
   </section>
 
-  <!-- PRODUCTS -->
   <section id="products" class="page">
     <h2>Our Products</h2>
-
-    <input
-      type="text"
-      id="search-input"
-      placeholder="Search products..."
-      class="search-box"
-    />
-
-    <select id="price-filter" class="search-box">
-      <option value="all">All Prices</option>
-      <option value="low">Below ₹150</option>
-      <option value="mid">₹150 - ₹200</option>
-      <option value="high">Above ₹200</option>
-    </select>
-
     <div id="products-grid" class="products-grid"></div>
   </section>
 
-  <!-- PRODUCT DETAIL -->
   <section id="product-detail" class="page">
     <div id="detail-container"></div>
   </section>
 
-  <!-- LOGIN -->
+  <section id="wishlist" class="page">
+    <h2>Your Wishlist ❤️</h2>
+    <div id="wishlist-container"></div>
+  </section>
+
   <section id="login" class="page">
     <h2>Login</h2>
-    <p>Frontend demo login page</p>
   </section>
 
 </main>
 
-<!-- CART MODAL -->
 <div id="cart-modal" class="cart-modal" aria-hidden="true">
   <div class="cart-panel">
     <div class="cart-header">
       <h3>Your Cart</h3>
       <button id="close-cart" class="close-btn">&times;</button>
     </div>
-
     <div id="cart-items" class="cart-body"></div>
-
     <div class="cart-footer">
       <div class="cart-totals">
         <span>Total:</span>
         <strong id="cart-total">₹0</strong>
       </div>
-      <button id="clear-cart" class="btn">Clear Cart</button>
     </div>
   </div>
 </div>
