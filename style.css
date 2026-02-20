@@ -31,9 +31,14 @@ nav a, nav button {
 
 .card {
   background: white;
-  padding: 10px;
+  padding: 12px;
   margin-bottom: 10px;
   border-radius: 6px;
+}
+
+button {
+  margin-top: 5px;
+  cursor: pointer;
 }
 
 /* DARK MODE */
