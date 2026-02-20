@@ -1,6 +1,3 @@
-const CART_KEY = "manjil_cart";
-
-/* PRODUCTS */
 const PRODUCTS = [
   {
     id: 1,
@@ -25,9 +22,8 @@ const PRODUCTS = [
   }
 ];
 
-let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-/* ROUTING */
 function showPage() {
   const hash = location.hash || "#home";
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -36,45 +32,32 @@ function showPage() {
 
   if (hash === "#cart") renderCart();
 }
+
 window.addEventListener("hashchange", showPage);
 
-/* RENDER PRODUCTS */
 function renderProducts() {
   const grid = document.getElementById("products-grid");
   grid.innerHTML = "";
 
-  PRODUCTS.forEach(product => {
+  PRODUCTS.forEach(p => {
     grid.innerHTML += `
-      <div class="product-card">
-        <div class="product-image">
-          <img src="${product.image}" />
-        </div>
-        <h3>${product.name}</h3>
-        <p>${product.desc}</p>
-        <div class="product-meta">
-          <span class="price">₹${product.price}</span>
-          <button onclick="addToCart(${product.id})" class="add-btn">
-            Add to Cart
-          </button>
-        </div>
+      <div class="card">
+        <img src="${p.image}">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <strong>₹${p.price}</strong>
+        <button onclick="addToCart(${p.id})">Add to Cart</button>
       </div>
     `;
   });
 }
 
-/* CART */
-function saveCart() {
-  localStorage.setItem(CART_KEY, JSON.stringify(cart));
-}
-
 function addToCart(id) {
   const item = cart.find(i => i.id === id);
-  if (item) {
-    item.qty++;
-  } else {
-    cart.push({ id, qty: 1 });
-  }
-  saveCart();
+  if (item) item.qty++;
+  else cart.push({ id, qty: 1 });
+
+  localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
 }
 
@@ -96,11 +79,10 @@ function renderCart() {
 
   cart.forEach(item => {
     const product = PRODUCTS.find(p => p.id === item.id);
-    const itemTotal = product.price * item.qty;
-    total += itemTotal;
+    total += product.price * item.qty;
 
     html += `
-      <div class="product-card">
+      <div class="card">
         <h3>${product.name}</h3>
         <p>${item.qty} × ₹${product.price}</p>
       </div>
@@ -111,18 +93,14 @@ function renderCart() {
   container.innerHTML = html;
 }
 
-/* SEARCH */
-document.getElementById("search-input").addEventListener("input", function () {
+document.getElementById("search").addEventListener("input", function () {
   const value = this.value.toLowerCase();
-  const cards = document.querySelectorAll(".product-card");
-
-  cards.forEach(card => {
+  document.querySelectorAll(".card").forEach(card => {
     const name = card.querySelector("h3").innerText.toLowerCase();
     card.style.display = name.includes(value) ? "block" : "none";
   });
 });
 
-/* INIT */
 renderProducts();
 updateCartCount();
 showPage();
