@@ -20,6 +20,11 @@
       <a href="#home" class="nav-link">Home</a>
       <a href="#products" class="nav-link">Products</a>
       <a href="#login" class="nav-link">Login</a>
+
+      <!-- Cart -->
+      <button id="cart-btn" class="cart-button">
+        Cart <span id="cart-count" class="cart-count">0</span>
+      </button>
     </nav>
   </div>
 </header>
@@ -44,6 +49,7 @@
   <section id="products" class="page">
     <h2>Our Products</h2>
 
+    <!-- 🔍 Search -->
     <input
       type="text"
       id="search-input"
@@ -51,6 +57,15 @@
       class="search-box"
     />
 
+    <!-- 💰 Price Filter -->
+    <select id="price-filter" class="search-box">
+      <option value="all">All Prices</option>
+      <option value="low">Below ₹150</option>
+      <option value="mid">₹150 - ₹200</option>
+      <option value="high">Above ₹200</option>
+    </select>
+
+    <!-- Products -->
     <div id="products-grid" class="products-grid"></div>
   </section>
 
