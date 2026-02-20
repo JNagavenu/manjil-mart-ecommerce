@@ -34,10 +34,11 @@ function renderProducts() {
   state.products.forEach(product => {
     const div = document.createElement("div");
     div.innerHTML = `
-      <p>${product.name} - ₹${product.price}</p>
+      <p><strong>${product.name}</strong> - ₹${product.price}</p>
       <button onclick="addToCart(${product.id})">
         Add to Cart
       </button>
+      <hr/>
     `;
     grid.appendChild(div);
   });
@@ -57,6 +58,35 @@ function addToCart(id) {
   updateCartCount();
 }
 
+function increaseQty(id) {
+  const item = state.cart.find(i => i.id === id);
+  if (item) {
+    item.quantity++;
+    saveCart();
+    renderCart();
+  }
+}
+
+function decreaseQty(id) {
+  const item = state.cart.find(i => i.id === id);
+  if (item) {
+    if (item.quantity > 1) {
+      item.quantity--;
+    } else {
+      removeItem(id);
+      return;
+    }
+    saveCart();
+    renderCart();
+  }
+}
+
+function removeItem(id) {
+  state.cart = state.cart.filter(i => i.id !== id);
+  saveCart();
+  renderCart();
+}
+
 function updateCartCount() {
   const total = state.cart.reduce((s,i)=>s+i.quantity,0);
   cartCountDisplay.textContent = total;
@@ -64,18 +94,35 @@ function updateCartCount() {
 
 function renderCart() {
   if (state.cart.length === 0) {
-    cartContainer.innerHTML = "<p>Cart is empty</p>";
+    cartContainer.innerHTML = "<p>Cart is empty 🛒</p>";
+    updateCartCount();
     return;
   }
 
+  let total = 0;
   let html = "<ul>";
+
   state.cart.forEach(item => {
     const product = state.products.find(p => p.id === item.id);
-    html += `<li>${product.name} x ${item.quantity}</li>`;
+    const itemTotal = product.price * item.quantity;
+    total += itemTotal;
+
+    html += `
+      <li>
+        <strong>${product.name}</strong><br/>
+        ₹${product.price} × ${item.quantity} = ₹${itemTotal}<br/>
+        <button onclick="decreaseQty(${item.id})">-</button>
+        <button onclick="increaseQty(${item.id})">+</button>
+        <button onclick="removeItem(${item.id})">Remove</button>
+        <hr/>
+      </li>
+    `;
   });
-  html += "</ul>";
+
+  html += `</ul><h3>Total: ₹${total}</h3>`;
 
   cartContainer.innerHTML = html;
+  updateCartCount();
 }
 
 /* CHECKOUT */
