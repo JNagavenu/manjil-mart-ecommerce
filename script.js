@@ -1,41 +1,69 @@
-/* ===============================
-   Manjil Mart - Upgraded Version
+/* ================================
+   Manjil Mart v2 - Pro Structure
 ================================= */
 
-/* ---------- PRODUCT DATA ---------- */
-const PRODUCTS = [
-  { id: 1, name: "Chilli Powder", price: 199 },
-  { id: 2, name: "Turmeric Powder", price: 149 },
-  { id: 3, name: "Dhaniya Powder", price: 129 },
-  { id: 4, name: "Masala Mix", price: 229 }
-];
+/* ---------- APP STATE ---------- */
+const state = {
+  products: [
+    { id: 1, name: "Chilli Powder", price: 199 },
+    { id: 2, name: "Turmeric Powder", price: 149 },
+    { id: 3, name: "Dhaniya Powder", price: 129 },
+    { id: 4, name: "Masala Mix", price: 229 }
+  ],
+  cart: [],
+  search: "",
+  priceFilter: "all"
+};
+
+/* ---------- SELECTORS ---------- */
+const grid = document.getElementById("products-grid");
+const searchInput = document.getElementById("search-input");
+const priceFilter = document.getElementById("price-filter");
+const cartCountDisplay = document.getElementById("cart-count");
 
 /* ---------- NAVIGATION ---------- */
-function showPage() {
+function handleRouting() {
   const hash = location.hash.replace("#", "") || "home";
 
   document.querySelectorAll(".page").forEach(section => {
     section.style.display = "none";
   });
 
-  const activeSection = document.getElementById(hash);
-  if (activeSection) {
-    activeSection.style.display = "block";
-  }
+  const active = document.getElementById(hash);
+  if (active) active.style.display = "block";
 }
 
-window.addEventListener("hashchange", showPage);
-showPage();
+window.addEventListener("hashchange", handleRouting);
 
-/* ---------- PRODUCT RENDERING ---------- */
-const grid = document.getElementById("products-grid");
+/* ---------- FILTER LOGIC ---------- */
+function getFilteredProducts() {
+  let filtered = [...state.products];
 
-function renderProducts(productList) {
-  if (!grid) return;
+  if (state.search) {
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(state.search)
+    );
+  }
 
+  if (state.priceFilter === "low") {
+    filtered = filtered.filter(p => p.price < 150);
+  } 
+  else if (state.priceFilter === "mid") {
+    filtered = filtered.filter(p => p.price >= 150 && p.price <= 200);
+  } 
+  else if (state.priceFilter === "high") {
+    filtered = filtered.filter(p => p.price > 200);
+  }
+
+  return filtered;
+}
+
+/* ---------- RENDER PRODUCTS ---------- */
+function renderProducts() {
+  const products = getFilteredProducts();
   grid.innerHTML = "";
 
-  productList.forEach(product => {
+  products.forEach(product => {
     const card = document.createElement("div");
     card.className = "product-card";
 
@@ -51,51 +79,51 @@ function renderProducts(productList) {
   });
 }
 
-renderProducts(PRODUCTS);
+/* ---------- CART LOGIC ---------- */
+function addToCart(productId) {
+  const existing = state.cart.find(item => item.id === productId);
 
-/* ---------- SEARCH + PRICE FILTER ---------- */
-const searchInput = document.getElementById("search-input");
-const priceFilter = document.getElementById("price-filter");
-
-function filterProducts() {
-  const searchValue = searchInput.value.toLowerCase();
-  const priceValue = priceFilter.value;
-
-  let filtered = PRODUCTS.filter(product =>
-    product.name.toLowerCase().includes(searchValue)
-  );
-
-  if (priceValue === "low") {
-    filtered = filtered.filter(p => p.price < 150);
-  } 
-  else if (priceValue === "mid") {
-    filtered = filtered.filter(p => p.price >= 150 && p.price <= 200);
-  } 
-  else if (priceValue === "high") {
-    filtered = filtered.filter(p => p.price > 200);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    state.cart.push({ id: productId, quantity: 1 });
   }
 
-  renderProducts(filtered);
+  updateCartCount();
 }
 
+function updateCartCount() {
+  const total = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  cartCountDisplay.textContent = total;
+}
+
+/* ---------- EVENT LISTENERS ---------- */
+document.addEventListener("click", function(e) {
+  if (e.target.classList.contains("add-btn")) {
+    const id = Number(e.target.getAttribute("data-id"));
+    addToCart(id);
+  }
+});
+
 if (searchInput) {
-  searchInput.addEventListener("input", filterProducts);
+  searchInput.addEventListener("input", function() {
+    state.search = searchInput.value.toLowerCase();
+    renderProducts();
+  });
 }
 
 if (priceFilter) {
-  priceFilter.addEventListener("change", filterProducts);
+  priceFilter.addEventListener("change", function() {
+    state.priceFilter = priceFilter.value;
+    renderProducts();
+  });
 }
 
-/* ---------- CART SYSTEM ---------- */
-let cartCount = 0;
-const cartCountDisplay = document.getElementById("cart-count");
+/* ---------- INIT ---------- */
+function init() {
+  handleRouting();
+  renderProducts();
+  updateCartCount();
+}
 
-document.addEventListener("click", function(e) {
-  if (e.target.classList.contains("add-btn")) {
-    cartCount++;
-    if (cartCountDisplay) {
-      cartCountDisplay.textContent = cartCount;
-    }
-    alert("Product added to cart!");
-  }
-});
+init();
