@@ -10,32 +10,31 @@ body {
   padding: 20px;
 }
 
-.site-header {
+header {
   background: #111;
   color: white;
+  padding: 10px 0;
 }
 
-.header-inner {
+.nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.brand {
+.logo-box {
   display: flex;
   align-items: center;
-  text-decoration: none;
-  color: white;
+  gap: 10px;
 }
 
 .logo {
   width: 50px;
-  margin-right: 10px;
 }
 
-.nav a {
+nav a {
   color: white;
-  margin-left: 15px;
+  margin-left: 20px;
   text-decoration: none;
 }
 
@@ -43,6 +42,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 40px;
 }
 
 .hero-img {
@@ -56,7 +56,7 @@ body {
   padding: 10px 15px;
   text-decoration: none;
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .grid {
@@ -87,4 +87,10 @@ body {
 
 .page.active {
   display: block;
+}
+
+input {
+  padding: 8px;
+  margin-top: 10px;
+  width: 250px;
 }
