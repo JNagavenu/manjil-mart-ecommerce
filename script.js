@@ -1,5 +1,5 @@
 /* ================================
-   Manjil Mart v2 - Pro Cart Version
+   Manjil Mart v3 - Premium UI
 ================================= */
 
 const CART_KEY = "manjil_cart";
@@ -29,16 +29,30 @@ const cartTotalDisplay = document.getElementById("cart-total");
 /* ---------- ROUTING ---------- */
 function handleRouting() {
   const hash = location.hash.replace("#", "") || "home";
-
-  document.querySelectorAll(".page").forEach(section => {
-    section.style.display = "none";
-  });
-
+  document.querySelectorAll(".page").forEach(sec => sec.style.display = "none");
   const active = document.getElementById(hash);
   if (active) active.style.display = "block";
 }
 
 window.addEventListener("hashchange", handleRouting);
+
+/* ---------- TOAST SYSTEM ---------- */
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+
+  document.body.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("show");
+  }, 100);
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}
 
 /* ---------- FILTER ---------- */
 function getFilteredProducts() {
@@ -84,7 +98,7 @@ function renderProducts() {
   });
 }
 
-/* ---------- CART LOGIC ---------- */
+/* ---------- CART ---------- */
 function saveCart() {
   localStorage.setItem(CART_KEY, JSON.stringify(state.cart));
 }
@@ -100,6 +114,7 @@ function addToCart(productId) {
 
   saveCart();
   renderCart();
+  showToast("Added to cart ✔");
 }
 
 function updateCartCount() {
@@ -109,6 +124,16 @@ function updateCartCount() {
 
 function renderCart() {
   cartItemsContainer.innerHTML = "";
+
+  if (state.cart.length === 0) {
+    cartItemsContainer.innerHTML =
+      `<p style="text-align:center;color:#777;padding:20px">
+        Your cart is empty 🛒
+       </p>`;
+    cartTotalDisplay.textContent = "₹0";
+    updateCartCount();
+    return;
+  }
 
   let total = 0;
 
@@ -121,14 +146,14 @@ function renderCart() {
     div.className = "cart-item";
 
     div.innerHTML = `
-      <div>${product.name}</div>
+      <div><strong>${product.name}</strong></div>
       <div>
         <button class="decrease" data-id="${item.id}">-</button>
         ${item.quantity}
         <button class="increase" data-id="${item.id}">+</button>
       </div>
       <div>₹${itemTotal}</div>
-      <button class="remove" data-id="${item.id}">x</button>
+      <button class="remove" data-id="${item.id}">✕</button>
     `;
 
     cartItemsContainer.appendChild(div);
@@ -140,6 +165,7 @@ function renderCart() {
 
 /* ---------- EVENTS ---------- */
 document.addEventListener("click", function(e) {
+
   if (e.target.classList.contains("add-btn")) {
     addToCart(Number(e.target.dataset.id));
   }
@@ -170,12 +196,14 @@ document.addEventListener("click", function(e) {
     state.cart = state.cart.filter(i => i.id !== Number(e.target.dataset.id));
     saveCart();
     renderCart();
+    showToast("Item removed ❌");
   }
 
   if (e.target.id === "clear-cart") {
     state.cart = [];
     saveCart();
     renderCart();
+    showToast("Cart cleared 🗑");
   }
 });
 
