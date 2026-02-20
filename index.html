@@ -10,49 +10,50 @@
 <body>
 
 <header class="site-header">
-  <h2>🛒 Manjil Mart</h2>
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#products">Products</a>
-    <a href="#cart">Cart (<span id="cart-count">0</span>)</a>
-    <a href="#orders">Orders</a>
-    <button id="theme-toggle">🌙</button>
-  </nav>
+  <div class="container header-inner">
+    <a class="brand" href="#home">
+      <img src="images/logo.jpg" class="logo" />
+      <span class="brand-name">Manjil Mart</span>
+    </a>
+
+    <nav class="nav">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#products" class="nav-link">Products</a>
+      <a href="#cart" class="nav-link">Cart (<span id="cart-count">0</span>)</a>
+    </nav>
+  </div>
 </header>
 
-<main>
+<main class="container main-content">
 
-<section id="home" class="page">
-  <h1>Welcome to Manjil Mart</h1>
-  <p>Premium spices delivered with purity.</p>
-</section>
+  <!-- HOME -->
+  <section id="home" class="page active">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Pure, Fresh & Authentic Spices</h1>
+        <p>Premium spices delivered with purity.</p>
+        <a href="#products" class="btn btn-primary">Shop Products</a>
+      </div>
+      <div class="hero-image">
+        <img src="images/spice1.jpg" />
+      </div>
+    </div>
+  </section>
 
-<section id="products" class="page">
-  <h2>Products</h2>
+  <!-- PRODUCTS -->
+  <section id="products" class="page">
+    <h2>Our Products</h2>
 
-  <input type="text" id="search-input" placeholder="Search..." />
-  <select id="sort-select">
-    <option value="default">Sort</option>
-    <option value="low-high">Low → High</option>
-    <option value="high-low">High → Low</option>
-  </select>
+    <input type="text" id="search-input" placeholder="Search..." class="search-box"/>
 
-  <div id="products-grid" class="grid"></div>
-</section>
+    <div id="products-grid" class="products-grid"></div>
+  </section>
 
-<section id="product-detail" class="page">
-  <div id="detail-container"></div>
-</section>
-
-<section id="cart" class="page">
-  <h2>Your Cart</h2>
-  <div id="cart-container"></div>
-</section>
-
-<section id="orders" class="page">
-  <h2>Order History</h2>
-  <div id="orders-container"></div>
-</section>
+  <!-- CART -->
+  <section id="cart" class="page">
+    <h2>Your Cart</h2>
+    <div id="cart-container"></div>
+  </section>
 
 </main>
 
