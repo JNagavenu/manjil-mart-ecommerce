@@ -1,6 +1,8 @@
 /* ================================
-   Manjil Mart v2 - Pro Structure
+   Manjil Mart v2 - Pro Cart Version
 ================================= */
+
+const CART_KEY = "manjil_cart";
 
 /* ---------- APP STATE ---------- */
 const state = {
@@ -10,7 +12,7 @@ const state = {
     { id: 3, name: "Dhaniya Powder", price: 129 },
     { id: 4, name: "Masala Mix", price: 229 }
   ],
-  cart: [],
+  cart: JSON.parse(localStorage.getItem(CART_KEY)) || [],
   search: "",
   priceFilter: "all"
 };
@@ -20,8 +22,11 @@ const grid = document.getElementById("products-grid");
 const searchInput = document.getElementById("search-input");
 const priceFilter = document.getElementById("price-filter");
 const cartCountDisplay = document.getElementById("cart-count");
+const cartModal = document.getElementById("cart-modal");
+const cartItemsContainer = document.getElementById("cart-items");
+const cartTotalDisplay = document.getElementById("cart-total");
 
-/* ---------- NAVIGATION ---------- */
+/* ---------- ROUTING ---------- */
 function handleRouting() {
   const hash = location.hash.replace("#", "") || "home";
 
@@ -35,7 +40,7 @@ function handleRouting() {
 
 window.addEventListener("hashchange", handleRouting);
 
-/* ---------- FILTER LOGIC ---------- */
+/* ---------- FILTER ---------- */
 function getFilteredProducts() {
   let filtered = [...state.products];
 
@@ -49,7 +54,7 @@ function getFilteredProducts() {
     filtered = filtered.filter(p => p.price < 150);
   } 
   else if (state.priceFilter === "mid") {
-    filtered = filtered.filter(p => p.price >= 150 && p.price <= 200);
+    filtered = filtered.filter(p => p.price <= 200 && p.price >= 150);
   } 
   else if (state.priceFilter === "high") {
     filtered = filtered.filter(p => p.price > 200);
@@ -80,6 +85,10 @@ function renderProducts() {
 }
 
 /* ---------- CART LOGIC ---------- */
+function saveCart() {
+  localStorage.setItem(CART_KEY, JSON.stringify(state.cart));
+}
+
 function addToCart(productId) {
   const existing = state.cart.find(item => item.id === productId);
 
@@ -89,7 +98,8 @@ function addToCart(productId) {
     state.cart.push({ id: productId, quantity: 1 });
   }
 
-  updateCartCount();
+  saveCart();
+  renderCart();
 }
 
 function updateCartCount() {
@@ -97,11 +107,75 @@ function updateCartCount() {
   cartCountDisplay.textContent = total;
 }
 
-/* ---------- EVENT LISTENERS ---------- */
+function renderCart() {
+  cartItemsContainer.innerHTML = "";
+
+  let total = 0;
+
+  state.cart.forEach(item => {
+    const product = state.products.find(p => p.id === item.id);
+    const itemTotal = product.price * item.quantity;
+    total += itemTotal;
+
+    const div = document.createElement("div");
+    div.className = "cart-item";
+
+    div.innerHTML = `
+      <div>${product.name}</div>
+      <div>
+        <button class="decrease" data-id="${item.id}">-</button>
+        ${item.quantity}
+        <button class="increase" data-id="${item.id}">+</button>
+      </div>
+      <div>₹${itemTotal}</div>
+      <button class="remove" data-id="${item.id}">x</button>
+    `;
+
+    cartItemsContainer.appendChild(div);
+  });
+
+  cartTotalDisplay.textContent = "₹" + total;
+  updateCartCount();
+}
+
+/* ---------- EVENTS ---------- */
 document.addEventListener("click", function(e) {
   if (e.target.classList.contains("add-btn")) {
-    const id = Number(e.target.getAttribute("data-id"));
-    addToCart(id);
+    addToCart(Number(e.target.dataset.id));
+  }
+
+  if (e.target.id === "cart-btn") {
+    cartModal.setAttribute("aria-hidden", "false");
+  }
+
+  if (e.target.id === "close-cart") {
+    cartModal.setAttribute("aria-hidden", "true");
+  }
+
+  if (e.target.classList.contains("increase")) {
+    const item = state.cart.find(i => i.id === Number(e.target.dataset.id));
+    item.quantity++;
+    saveCart();
+    renderCart();
+  }
+
+  if (e.target.classList.contains("decrease")) {
+    const item = state.cart.find(i => i.id === Number(e.target.dataset.id));
+    if (item.quantity > 1) item.quantity--;
+    saveCart();
+    renderCart();
+  }
+
+  if (e.target.classList.contains("remove")) {
+    state.cart = state.cart.filter(i => i.id !== Number(e.target.dataset.id));
+    saveCart();
+    renderCart();
+  }
+
+  if (e.target.id === "clear-cart") {
+    state.cart = [];
+    saveCart();
+    renderCart();
   }
 });
 
@@ -123,7 +197,7 @@ if (priceFilter) {
 function init() {
   handleRouting();
   renderProducts();
-  updateCartCount();
+  renderCart();
 }
 
 init();
