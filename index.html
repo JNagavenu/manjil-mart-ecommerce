@@ -19,7 +19,9 @@
     <nav class="nav">
       <a href="#home" class="nav-link">Home</a>
       <a href="#products" class="nav-link">Products</a>
-      <a href="#cart" class="nav-link">Cart (<span id="cart-count">0</span>)</a>
+      <a href="#cart" class="nav-link">
+        Cart <span id="cart-count" class="cart-count">0</span>
+      </a>
     </nav>
   </div>
 </header>
@@ -31,9 +33,10 @@
     <div class="hero">
       <div class="hero-text">
         <h1>Pure, Fresh & Authentic Spices</h1>
-        <p>Premium spices delivered with purity.</p>
+        <p>Hand-sourced, sun-dried, and packed with love.</p>
         <a href="#products" class="btn btn-primary">Shop Products</a>
       </div>
+
       <div class="hero-image">
         <img src="images/spice1.jpg" />
       </div>
@@ -42,9 +45,10 @@
 
   <!-- PRODUCTS -->
   <section id="products" class="page">
-    <h2>Our Products</h2>
-
-    <input type="text" id="search-input" placeholder="Search..." class="search-box"/>
+    <div class="section-head">
+      <h2>Our Products</h2>
+      <input type="text" id="search-input" placeholder="Search products..." class="search-box"/>
+    </div>
 
     <div id="products-grid" class="products-grid"></div>
   </section>
