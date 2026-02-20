@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Manjil Mart — Pure Products</title>
+  <title>Manjil Mart</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -17,16 +17,10 @@
     </a>
 
     <nav class="nav">
-      <a href="#home" class="nav-link">Home</a>
-      <a href="#products" class="nav-link">Products</a>
-      <a href="#wishlist" class="nav-link">
-        Wishlist ❤️ <span id="wishlist-count">0</span>
-      </a>
-      <a href="#login" class="nav-link">Login</a>
-
-      <button id="cart-btn" class="cart-button">
-        Cart <span id="cart-count" class="cart-count">0</span>
-      </button>
+      <a href="#home">Home</a>
+      <a href="#products">Products</a>
+      <a href="#cart">Cart 🛒 <span id="cart-count">0</span></a>
+      <a href="#checkout">Checkout</a>
     </nav>
   </div>
 </header>
@@ -38,41 +32,19 @@
   </section>
 
   <section id="products" class="page">
-    <h2>Our Products</h2>
-    <div id="products-grid" class="products-grid"></div>
+    <h2>Products</h2>
+    <div id="products-grid"></div>
   </section>
 
-  <section id="product-detail" class="page">
-    <div id="detail-container"></div>
+  <!-- CART PAGE -->
+  <section id="cart" class="page">
+    <h2>Your Cart</h2>
+    <div id="cart-container"></div>
   </section>
 
-  <section id="wishlist" class="page">
-    <h2>Your Wishlist ❤️</h2>
-    <div id="wishlist-container"></div>
-  </section>
-
-  <!-- CHECKOUT PAGE -->
   <section id="checkout" class="page">
     <h2>Checkout</h2>
     <div id="checkout-summary"></div>
-
-    <form id="checkout-form">
-      <input type="text" placeholder="Full Name" required />
-      <input type="text" placeholder="Address" required />
-      <input type="text" placeholder="Phone Number" required />
-      <button type="submit" class="btn btn-primary">
-        Place Order
-      </button>
-    </form>
-  </section>
-
-  <!-- ORDER SUCCESS PAGE -->
-  <section id="order-success" class="page">
-    <h2>🎉 Order Placed Successfully!</h2>
-    <p>Thank you for shopping with Manjil Mart.</p>
-    <button onclick="location.hash='#home'" class="btn btn-primary">
-      Back to Home
-    </button>
   </section>
 
 </main>
