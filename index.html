@@ -51,27 +51,31 @@
     <div id="wishlist-container"></div>
   </section>
 
-  <section id="login" class="page">
-    <h2>Login</h2>
+  <!-- CHECKOUT PAGE -->
+  <section id="checkout" class="page">
+    <h2>Checkout</h2>
+    <div id="checkout-summary"></div>
+
+    <form id="checkout-form">
+      <input type="text" placeholder="Full Name" required />
+      <input type="text" placeholder="Address" required />
+      <input type="text" placeholder="Phone Number" required />
+      <button type="submit" class="btn btn-primary">
+        Place Order
+      </button>
+    </form>
+  </section>
+
+  <!-- ORDER SUCCESS PAGE -->
+  <section id="order-success" class="page">
+    <h2>🎉 Order Placed Successfully!</h2>
+    <p>Thank you for shopping with Manjil Mart.</p>
+    <button onclick="location.hash='#home'" class="btn btn-primary">
+      Back to Home
+    </button>
   </section>
 
 </main>
-
-<div id="cart-modal" class="cart-modal" aria-hidden="true">
-  <div class="cart-panel">
-    <div class="cart-header">
-      <h3>Your Cart</h3>
-      <button id="close-cart" class="close-btn">&times;</button>
-    </div>
-    <div id="cart-items" class="cart-body"></div>
-    <div class="cart-footer">
-      <div class="cart-totals">
-        <span>Total:</span>
-        <strong id="cart-total">₹0</strong>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="script.js"></script>
 
