@@ -1,4 +1,5 @@
 const CART_KEY = "manjil_cart";
+const ORDERS_KEY = "manjil_orders";
 
 const state = {
   products: [
@@ -7,12 +8,14 @@ const state = {
     { id: 3, name: "Dhaniya Powder", price: 129 },
     { id: 4, name: "Masala Mix", price: 229 }
   ],
-  cart: JSON.parse(localStorage.getItem(CART_KEY)) || []
+  cart: JSON.parse(localStorage.getItem(CART_KEY)) || [],
+  orders: JSON.parse(localStorage.getItem(ORDERS_KEY)) || []
 };
 
 const grid = document.getElementById("products-grid");
 const cartContainer = document.getElementById("cart-container");
 const checkoutSummary = document.getElementById("checkout-summary");
+const ordersContainer = document.getElementById("orders-container");
 const cartCountDisplay = document.getElementById("cart-count");
 
 /* ROUTING */
@@ -25,6 +28,7 @@ function handleRouting() {
 
   if (hash === "#cart") renderCart();
   if (hash === "#checkout") renderCheckout();
+  if (hash === "#orders") renderOrders();
 }
 window.addEventListener("hashchange", handleRouting);
 
@@ -32,19 +36,17 @@ window.addEventListener("hashchange", handleRouting);
 function renderProducts() {
   grid.innerHTML = "";
   state.products.forEach(product => {
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <p><strong>${product.name}</strong> - ₹${product.price}</p>
-      <button onclick="addToCart(${product.id})">
-        Add to Cart
-      </button>
-      <hr/>
+    grid.innerHTML += `
+      <div>
+        <p><strong>${product.name}</strong> - ₹${product.price}</p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
+        <hr/>
+      </div>
     `;
-    grid.appendChild(div);
   });
 }
 
-/* CART LOGIC */
+/* CART */
 function saveCart() {
   localStorage.setItem(CART_KEY, JSON.stringify(state.cart));
 }
@@ -56,35 +58,6 @@ function addToCart(id) {
 
   saveCart();
   updateCartCount();
-}
-
-function increaseQty(id) {
-  const item = state.cart.find(i => i.id === id);
-  if (item) {
-    item.quantity++;
-    saveCart();
-    renderCart();
-  }
-}
-
-function decreaseQty(id) {
-  const item = state.cart.find(i => i.id === id);
-  if (item) {
-    if (item.quantity > 1) {
-      item.quantity--;
-    } else {
-      removeItem(id);
-      return;
-    }
-    saveCart();
-    renderCart();
-  }
-}
-
-function removeItem(id) {
-  state.cart = state.cart.filter(i => i.id !== id);
-  saveCart();
-  renderCart();
 }
 
 function updateCartCount() {
@@ -109,41 +82,72 @@ function renderCart() {
 
     html += `
       <li>
-        <strong>${product.name}</strong><br/>
-        ₹${product.price} × ${item.quantity} = ₹${itemTotal}<br/>
-        <button onclick="decreaseQty(${item.id})">-</button>
-        <button onclick="increaseQty(${item.id})">+</button>
+        ${product.name} x ${item.quantity} = ₹${itemTotal}
         <button onclick="removeItem(${item.id})">Remove</button>
-        <hr/>
       </li>
     `;
   });
 
-  html += `</ul><h3>Total: ₹${total}</h3>`;
+  html += `</ul><h3>Total: ₹${total}</h3>
+           <button onclick="placeOrder()">Place Order</button>`;
 
   cartContainer.innerHTML = html;
   updateCartCount();
 }
 
-/* CHECKOUT */
-function renderCheckout() {
-  if (state.cart.length === 0) {
-    checkoutSummary.innerHTML = "<p>No items to checkout</p>";
+function removeItem(id) {
+  state.cart = state.cart.filter(i => i.id !== id);
+  saveCart();
+  renderCart();
+}
+
+/* ORDER SYSTEM */
+function saveOrders() {
+  localStorage.setItem(ORDERS_KEY, JSON.stringify(state.orders));
+}
+
+function placeOrder() {
+  if (state.cart.length === 0) return;
+
+  const order = {
+    id: "ORD" + Date.now(),
+    items: [...state.cart],
+    date: new Date().toLocaleString()
+  };
+
+  state.orders.push(order);
+  saveOrders();
+
+  state.cart = [];
+  saveCart();
+  updateCartCount();
+
+  location.hash = "#orders";
+}
+
+function renderOrders() {
+  if (state.orders.length === 0) {
+    ordersContainer.innerHTML = "<p>No orders yet.</p>";
     return;
   }
 
-  let total = 0;
-  let html = "<ul>";
+  let html = "";
 
-  state.cart.forEach(item => {
-    const product = state.products.find(p => p.id === item.id);
-    const itemTotal = product.price * item.quantity;
-    total += itemTotal;
-    html += `<li>${product.name} x ${item.quantity} = ₹${itemTotal}</li>`;
+  state.orders.forEach(order => {
+    html += `<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+              <strong>Order ID:</strong> ${order.id}<br/>
+              <strong>Date:</strong> ${order.date}<br/>
+              <ul>`;
+
+    order.items.forEach(item => {
+      const product = state.products.find(p => p.id === item.id);
+      html += `<li>${product.name} x ${item.quantity}</li>`;
+    });
+
+    html += `</ul></div>`;
   });
 
-  html += `</ul><h3>Total: ₹${total}</h3>`;
-  checkoutSummary.innerHTML = html;
+  ordersContainer.innerHTML = html;
 }
 
 /* INIT */
