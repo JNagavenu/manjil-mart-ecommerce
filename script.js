@@ -1,5 +1,6 @@
 const CART_KEY = "manjil_cart";
 const ORDERS_KEY = "manjil_orders";
+const THEME_KEY = "manjil_theme";
 
 const state = {
   products: [
@@ -17,6 +18,7 @@ const cartContainer = document.getElementById("cart-container");
 const checkoutSummary = document.getElementById("checkout-summary");
 const ordersContainer = document.getElementById("orders-container");
 const cartCountDisplay = document.getElementById("cart-count");
+const themeToggle = document.getElementById("theme-toggle");
 
 /* ROUTING */
 function handleRouting() {
@@ -37,10 +39,10 @@ function renderProducts() {
   grid.innerHTML = "";
   state.products.forEach(product => {
     grid.innerHTML += `
-      <div>
-        <p><strong>${product.name}</strong> - ₹${product.price}</p>
+      <div class="card">
+        <p><strong>${product.name}</strong></p>
+        <p>₹${product.price}</p>
         <button onclick="addToCart(${product.id})">Add to Cart</button>
-        <hr/>
       </div>
     `;
   });
@@ -55,7 +57,6 @@ function addToCart(id) {
   const existing = state.cart.find(i => i.id === id);
   if (existing) existing.quantity++;
   else state.cart.push({ id, quantity: 1 });
-
   saveCart();
   updateCartCount();
 }
@@ -65,15 +66,30 @@ function updateCartCount() {
   cartCountDisplay.textContent = total;
 }
 
+function increaseQty(id) {
+  const item = state.cart.find(i => i.id === id);
+  item.quantity++;
+  saveCart();
+  renderCart();
+}
+
+function decreaseQty(id) {
+  const item = state.cart.find(i => i.id === id);
+  if (item.quantity > 1) item.quantity--;
+  else state.cart = state.cart.filter(i => i.id !== id);
+  saveCart();
+  renderCart();
+}
+
 function renderCart() {
   if (state.cart.length === 0) {
-    cartContainer.innerHTML = "<p>Cart is empty 🛒</p>";
+    cartContainer.innerHTML = "<p>Cart is empty</p>";
     updateCartCount();
     return;
   }
 
   let total = 0;
-  let html = "<ul>";
+  let html = "";
 
   state.cart.forEach(item => {
     const product = state.products.find(p => p.id === item.id);
@@ -81,27 +97,44 @@ function renderCart() {
     total += itemTotal;
 
     html += `
-      <li>
-        ${product.name} x ${item.quantity} = ₹${itemTotal}
-        <button onclick="removeItem(${item.id})">Remove</button>
-      </li>
+      <div class="card">
+        <p>${product.name}</p>
+        <p>₹${product.price} × ${item.quantity} = ₹${itemTotal}</p>
+        <button onclick="decreaseQty(${item.id})">-</button>
+        <button onclick="increaseQty(${item.id})">+</button>
+      </div>
     `;
   });
 
-  html += `</ul><h3>Total: ₹${total}</h3>
+  html += `<h3>Total: ₹${total}</h3>
            <button onclick="placeOrder()">Place Order</button>`;
 
   cartContainer.innerHTML = html;
   updateCartCount();
 }
 
-function removeItem(id) {
-  state.cart = state.cart.filter(i => i.id !== id);
-  saveCart();
-  renderCart();
+/* CHECKOUT */
+function renderCheckout() {
+  if (state.cart.length === 0) {
+    checkoutSummary.innerHTML = "<p>No items to checkout</p>";
+    return;
+  }
+
+  let total = 0;
+  let html = "";
+
+  state.cart.forEach(item => {
+    const product = state.products.find(p => p.id === item.id);
+    const itemTotal = product.price * item.quantity;
+    total += itemTotal;
+    html += `<p>${product.name} x ${item.quantity} = ₹${itemTotal}</p>`;
+  });
+
+  html += `<h3>Total: ₹${total}</h3>`;
+  checkoutSummary.innerHTML = html;
 }
 
-/* ORDER SYSTEM */
+/* ORDERS */
 function saveOrders() {
   localStorage.setItem(ORDERS_KEY, JSON.stringify(state.orders));
 }
@@ -117,7 +150,6 @@ function placeOrder() {
 
   state.orders.push(order);
   saveOrders();
-
   state.cart = [];
   saveCart();
   updateCartCount();
@@ -134,21 +166,31 @@ function renderOrders() {
   let html = "";
 
   state.orders.forEach(order => {
-    html += `<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-              <strong>Order ID:</strong> ${order.id}<br/>
-              <strong>Date:</strong> ${order.date}<br/>
-              <ul>`;
-
-    order.items.forEach(item => {
-      const product = state.products.find(p => p.id === item.id);
-      html += `<li>${product.name} x ${item.quantity}</li>`;
-    });
-
-    html += `</ul></div>`;
+    html += `
+      <div class="card">
+        <p><strong>${order.id}</strong></p>
+        <p>${order.date}</p>
+      </div>
+    `;
   });
 
   ordersContainer.innerHTML = html;
 }
+
+/* DARK MODE */
+function applyTheme(theme) {
+  document.body.classList.toggle("dark", theme === "dark");
+  themeToggle.textContent = theme === "dark" ? "☀️ Light" : "🌙 Dark";
+}
+
+themeToggle.addEventListener("click", () => {
+  const current = localStorage.getItem(THEME_KEY) || "light";
+  const newTheme = current === "light" ? "dark" : "light";
+  localStorage.setItem(THEME_KEY, newTheme);
+  applyTheme(newTheme);
+});
+
+applyTheme(localStorage.getItem(THEME_KEY) || "light");
 
 /* INIT */
 function init() {
