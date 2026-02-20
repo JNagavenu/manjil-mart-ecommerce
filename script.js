@@ -17,6 +17,7 @@ const detailContainer = document.getElementById("detail-container");
 const wishlistContainer = document.getElementById("wishlist-container");
 const cartCountDisplay = document.getElementById("cart-count");
 const wishlistCountDisplay = document.getElementById("wishlist-count");
+const checkoutSummary = document.getElementById("checkout-summary");
 
 /* ROUTING */
 function handleRouting() {
@@ -43,12 +44,8 @@ function renderProducts() {
     card.innerHTML = `
       <div>${product.name}</div>
       <div>₹${product.price}</div>
-      <button onclick="location.hash='#detail-${product.id}'">
-        View
-      </button>
-      <button onclick="addToWishlist(${product.id})">
-        ❤️
-      </button>
+      <button onclick="location.hash='#detail-${product.id}'">View</button>
+      <button onclick="addToCart(${product.id})">Add to Cart</button>
     `;
     grid.appendChild(card);
   });
@@ -61,16 +58,9 @@ function renderProductDetail(id) {
     <h2>${product.name}</h2>
     <p>${product.desc}</p>
     <h3>₹${product.price}</h3>
-    <button onclick="addToCart(${product.id})">
-      Add to Cart
-    </button>
-    <button onclick="addToWishlist(${product.id})">
-      Add to Wishlist ❤️
-    </button>
+    <button onclick="addToCart(${product.id})">Add to Cart</button>
     <br/><br/>
-    <button onclick="location.hash='#products'">
-      Back
-    </button>
+    <button onclick="location.hash='#products'">Back</button>
   `;
 }
 
@@ -90,43 +80,44 @@ function updateCartCount() {
   cartCountDisplay.textContent = total;
 }
 
-/* WISHLIST */
-function saveWishlist() {
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(state.wishlist));
-}
-function addToWishlist(id) {
-  if (!state.wishlist.includes(id)) {
-    state.wishlist.push(id);
-    saveWishlist();
-    updateWishlistCount();
-    renderWishlist();
-  }
-}
-function updateWishlistCount() {
-  wishlistCountDisplay.textContent = state.wishlist.length;
-}
-function renderWishlist() {
-  wishlistContainer.innerHTML = "";
-  if (state.wishlist.length === 0) {
-    wishlistContainer.innerHTML = "<p>No items saved.</p>";
+/* CHECKOUT */
+function renderCheckout() {
+  if (!checkoutSummary) return;
+  if (state.cart.length === 0) {
+    checkoutSummary.innerHTML = "<p>Your cart is empty.</p>";
     return;
   }
-  state.wishlist.forEach(id => {
-    const product = state.products.find(p => p.id === id);
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <div>${product.name} - ₹${product.price}</div>
-    `;
-    wishlistContainer.appendChild(div);
+
+  let total = 0;
+  let html = "<ul>";
+
+  state.cart.forEach(item => {
+    const product = state.products.find(p => p.id === item.id);
+    const itemTotal = product.price * item.quantity;
+    total += itemTotal;
+    html += `<li>${product.name} x ${item.quantity} = ₹${itemTotal}</li>`;
   });
+
+  html += `</ul><h3>Total: ₹${total}</h3>`;
+  checkoutSummary.innerHTML = html;
 }
+
+/* PLACE ORDER */
+document.addEventListener("submit", function(e) {
+  if (e.target.id === "checkout-form") {
+    e.preventDefault();
+    state.cart = [];
+    saveCart();
+    updateCartCount();
+    location.hash = "#order-success";
+  }
+});
 
 /* INIT */
 function init() {
   renderProducts();
-  renderWishlist();
   updateCartCount();
-  updateWishlistCount();
   handleRouting();
+  renderCheckout();
 }
 init();
