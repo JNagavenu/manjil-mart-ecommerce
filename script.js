@@ -46,11 +46,17 @@ function renderProducts() {
   PRODUCTS.forEach(product => {
     grid.innerHTML += `
       <div class="product-card">
-        <img src="${product.image}" />
+        <div class="product-image">
+          <img src="${product.image}" />
+        </div>
         <h3>${product.name}</h3>
         <p>${product.desc}</p>
-        <p><strong>₹${product.price}</strong></p>
-        <button onclick="addToCart(${product.id})">Add to Cart</button>
+        <div class="product-meta">
+          <span class="price">₹${product.price}</span>
+          <button onclick="addToCart(${product.id})" class="add-btn">
+            Add to Cart
+          </button>
+        </div>
       </div>
     `;
   });
@@ -70,7 +76,6 @@ function addToCart(id) {
   }
   saveCart();
   updateCartCount();
-  alert("Added to cart");
 }
 
 function updateCartCount() {
@@ -82,7 +87,7 @@ function renderCart() {
   const container = document.getElementById("cart-container");
 
   if (cart.length === 0) {
-    container.innerHTML = "<p>Your cart is empty</p>";
+    container.innerHTML = "<p>Your cart is empty.</p>";
     return;
   }
 
@@ -103,7 +108,6 @@ function renderCart() {
   });
 
   html += `<h3>Total: ₹${total}</h3>`;
-
   container.innerHTML = html;
 }
 
