@@ -9,106 +9,60 @@
 
 <body>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="#home" id="logo-link">
-        <img src="images/logo.jpg" alt="Manjil logo" class="logo" />
-        <span class="brand-name">Manjil Mart</span>
-      </a>
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#home">
+      <img src="images/logo.jpg" class="logo" />
+      <span class="brand-name">Manjil Mart</span>
+    </a>
 
-      <nav class="nav">
-        <a href="#home" class="nav-link">Home</a>
-        <a href="#products" class="nav-link">Products</a>
-        <a href="#login" class="nav-link" id="nav-login">Login</a>
-        <button class="cart-button" id="cart-btn">
-          Cart <span class="cart-count" id="cart-count">0</span>
-        </button>
-      </nav>
+    <nav class="nav">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#products" class="nav-link">Products</a>
+      <a href="#login" class="nav-link">Login</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container main-content">
+
+  <!-- HOME -->
+  <section id="home" class="page">
+    <div class="hero">
+      <div class="hero-text">
+        <h1>Pure, Fresh & Authentic Spices</h1>
+        <p>Hand-sourced, sun-dried, and packed with love.</p>
+        <a href="#products" class="btn btn-primary">Shop Products</a>
+      </div>
+      <div class="hero-image">
+        <img src="images/spice1.jpg" />
+      </div>
     </div>
-  </header>
+  </section>
 
-  <main class="container main-content">
+  <!-- PRODUCTS -->
+  <section id="products" class="page">
+    <h2>Our Products</h2>
 
-    <!-- HOME -->
-    <section id="home" class="page active">
-      <div class="hero">
-        <div class="hero-text">
-          <h1>Pure, Fresh & Authentic Spices</h1>
-          <p>Hand-sourced, sun-dried, and packed with love.</p>
-          <a href="#products" class="btn btn-primary">Shop Products</a>
-        </div>
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Search products..."
+      class="search-box"
+    />
 
-        <div class="hero-image">
-          <img src="images/spice1.jpg" alt="Spice Image" />
-        </div>
-      </div>
+    <div id="products-grid" class="products-grid"></div>
+  </section>
 
-      <div class="features">
-        <div class="feature-card">
-          <h3>Natural & Pure</h3>
-          <p>No additives. Straight from trusted farms.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Quality Packing</h3>
-          <p>Airtight & resealable for freshness.</p>
-        </div>
-        <div class="feature-card">
-          <h3>Fast Delivery</h3>
-          <p>Secure shipping across regions.</p>
-        </div>
-      </div>
-    </section>
+  <!-- LOGIN -->
+  <section id="login" class="page">
+    <h2>Login</h2>
+    <p>Frontend demo login page</p>
+  </section>
 
-    <!-- PRODUCTS -->
-    <section id="products" class="page">
-      <div class="section-head">
-        <h2>Our Products</h2>
-        <p>High-quality spice powders curated for your kitchen.</p>
+</main>
 
-        <!-- 🔍 SEARCH BAR ADDED -->
-        <input 
-          type="text" 
-          id="search-input" 
-          placeholder="Search products..." 
-          class="search-box"
-        />
-      </div>
-
-      <div class="products-grid" id="products-grid">
-        <!-- Product cards inserted by JS -->
-      </div>
-    </section>
-
-    <!-- LOGIN -->
-    <section id="login" class="page">
-      <div class="form-card">
-        <h2>Login</h2>
-        <form id="login-form" class="login-form" autocomplete="off">
-          <label>Email</label>
-          <input type="email" required placeholder="you@example.com" />
-
-          <label>Password</label>
-          <input type="password" required minlength="6" placeholder="At least 6 characters" />
-
-          <button type="submit" class="btn btn-primary">Login</button>
-          <p class="muted">Frontend demo login.</p>
-        </form>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <img src="images/logo.jpg" alt="Manjil logo" />
-        <span>Manjil Mart — Your journey to purity starts here</span>
-      </div>
-      <small>© 2026 Manjil Mart. All rights reserved.</small>
-    </div>
-  </footer>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
