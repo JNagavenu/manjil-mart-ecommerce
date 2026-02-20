@@ -288,4 +288,22 @@ function updateAuthUI() {
 updateAuthUI();
 
 /* small finishing touches */
+
 document.getElementById("year").textContent = new Date().getFullYear();
+
+const searchInput = document.getElementById("search-input");
+
+searchInput.addEventListener("input", function () {
+  const searchValue = searchInput.value.toLowerCase();
+  const products = document.querySelectorAll(".product-card");
+
+  products.forEach(product => {
+    const productName = product.querySelector("h3").innerText.toLowerCase();
+
+    if (productName.includes(searchValue)) {
+      product.style.display = "block";
+    } else {
+      product.style.display = "none";
+    }
+  });
+});
