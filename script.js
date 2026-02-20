@@ -36,8 +36,19 @@ window.addEventListener("hashchange", handleRouting);
 
 /* PRODUCTS */
 function renderProducts() {
+  const searchValue = document.getElementById("search-input")?.value?.toLowerCase() || "";
+  const sortValue = document.getElementById("sort-select")?.value || "default";
+
+  let filtered = state.products.filter(p =>
+    p.name.toLowerCase().includes(searchValue)
+  );
+
+  if (sortValue === "low-high") filtered.sort((a,b)=>a.price-b.price);
+  if (sortValue === "high-low") filtered.sort((a,b)=>b.price-a.price);
+
   grid.innerHTML = "";
-  state.products.forEach(product => {
+
+  filtered.forEach(product => {
     grid.innerHTML += `
       <div class="card">
         <p><strong>${product.name}</strong></p>
@@ -61,11 +72,6 @@ function addToCart(id) {
   updateCartCount();
 }
 
-function updateCartCount() {
-  const total = state.cart.reduce((s,i)=>s+i.quantity,0);
-  cartCountDisplay.textContent = total;
-}
-
 function increaseQty(id) {
   const item = state.cart.find(i => i.id === id);
   item.quantity++;
@@ -79,6 +85,11 @@ function decreaseQty(id) {
   else state.cart = state.cart.filter(i => i.id !== id);
   saveCart();
   renderCart();
+}
+
+function updateCartCount() {
+  const total = state.cart.reduce((s,i)=>s+i.quantity,0);
+  cartCountDisplay.textContent = total;
 }
 
 function renderCart() {
@@ -150,6 +161,7 @@ function placeOrder() {
 
   state.orders.push(order);
   saveOrders();
+
   state.cart = [];
   saveCart();
   updateCartCount();
@@ -191,6 +203,15 @@ themeToggle.addEventListener("click", () => {
 });
 
 applyTheme(localStorage.getItem(THEME_KEY) || "light");
+
+/* SEARCH + SORT EVENTS */
+document.addEventListener("input", e => {
+  if (e.target.id === "search-input") renderProducts();
+});
+
+document.addEventListener("change", e => {
+  if (e.target.id === "sort-select") renderProducts();
+});
 
 /* INIT */
 function init() {
