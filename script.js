@@ -1,182 +1,124 @@
 const CART_KEY = "manjil_cart";
-const THEME_KEY = "manjil_theme";
 
-const state = {
-  products: [
-    {
-      id: 1,
-      name: "Chilli Powder",
-      price: 199,
-      rating: 4.5,
-      desc: "Premium spicy red chilli powder.",
-      image: "https://via.placeholder.com/150"
-    },
-    {
-      id: 2,
-      name: "Turmeric Powder",
-      price: 149,
-      rating: 4.7,
-      desc: "Pure turmeric with rich aroma.",
-      image: "https://via.placeholder.com/150"
-    },
-    {
-      id: 3,
-      name: "Dhaniya Powder",
-      price: 129,
-      rating: 4.3,
-      desc: "Fresh ground coriander powder.",
-      image: "https://via.placeholder.com/150"
-    }
-  ],
-  cart: JSON.parse(localStorage.getItem(CART_KEY)) || []
-};
+/* PRODUCTS */
+const PRODUCTS = [
+  {
+    id: 1,
+    name: "Chilli Powder",
+    price: 199,
+    desc: "Premium spicy red chilli powder.",
+    image: "images/chilli-powder.jpg"
+  },
+  {
+    id: 2,
+    name: "Turmeric Powder",
+    price: 149,
+    desc: "Pure turmeric with rich aroma.",
+    image: "images/spice1.jpg"
+  },
+  {
+    id: 3,
+    name: "Dhaniya Powder",
+    price: 129,
+    desc: "Fresh ground coriander powder.",
+    image: "images/spice2.jpg"
+  }
+];
 
-const grid = document.getElementById("products-grid");
-const detailContainer = document.getElementById("detail-container");
-const cartContainer = document.getElementById("cart-container");
-const cartCount = document.getElementById("cart-count");
-const themeToggle = document.getElementById("theme-toggle");
+let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
 
 /* ROUTING */
-function route() {
+function showPage() {
   const hash = location.hash || "#home";
-  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-
-  if (hash.startsWith("#product-")) {
-    const id = parseInt(hash.split("-")[1]);
-    renderDetail(id);
-    document.getElementById("product-detail").style.display = "block";
-  } else {
-    const page = document.getElementById(hash.replace("#",""));
-    if (page) page.style.display = "block";
-  }
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  const page = document.querySelector(hash);
+  if (page) page.classList.add("active");
 
   if (hash === "#cart") renderCart();
 }
-window.addEventListener("hashchange", route);
+window.addEventListener("hashchange", showPage);
 
-/* PRODUCTS */
+/* RENDER PRODUCTS */
 function renderProducts() {
-  const search = document.getElementById("search-input")?.value?.toLowerCase() || "";
-  const sort = document.getElementById("sort-select")?.value || "default";
-
-  let filtered = state.products.filter(p =>
-    p.name.toLowerCase().includes(search)
-  );
-
-  if (sort === "low-high") filtered.sort((a,b)=>a.price-b.price);
-  if (sort === "high-low") filtered.sort((a,b)=>b.price-a.price);
-
+  const grid = document.getElementById("products-grid");
   grid.innerHTML = "";
 
-  filtered.forEach(product => {
+  PRODUCTS.forEach(product => {
     grid.innerHTML += `
-      <div class="card">
+      <div class="product-card">
         <img src="${product.image}" />
         <h3>${product.name}</h3>
-        <p>₹${product.price}</p>
-        <p>⭐ ${product.rating}</p>
-        <button onclick="location.hash='#product-${product.id}'">
-          View Details
-        </button>
+        <p>${product.desc}</p>
+        <p><strong>₹${product.price}</strong></p>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
       </div>
     `;
   });
 }
 
-/* DETAIL PAGE */
-function renderDetail(id) {
-  const product = state.products.find(p => p.id === id);
-
-  detailContainer.innerHTML = `
-    <div class="detail">
-      <img src="${product.image}" />
-      <h2>${product.name}</h2>
-      <p>${product.desc}</p>
-      <p>⭐ ${product.rating}</p>
-      <h3>₹${product.price}</h3>
-      <button onclick="addToCart(${product.id})">
-        Add to Cart
-      </button>
-      <br/><br/>
-      <button onclick="location.hash='#products'">
-        Back
-      </button>
-    </div>
-  `;
-}
-
 /* CART */
 function saveCart() {
-  localStorage.setItem(CART_KEY, JSON.stringify(state.cart));
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 
 function addToCart(id) {
-  const existing = state.cart.find(i => i.id === id);
-  if (existing) existing.qty++;
-  else state.cart.push({ id, qty: 1 });
-
+  const item = cart.find(i => i.id === id);
+  if (item) {
+    item.qty++;
+  } else {
+    cart.push({ id, qty: 1 });
+  }
   saveCart();
   updateCartCount();
+  alert("Added to cart");
 }
 
 function updateCartCount() {
-  const total = state.cart.reduce((s,i)=>s+i.qty,0);
-  cartCount.textContent = total;
+  const total = cart.reduce((sum, item) => sum + item.qty, 0);
+  document.getElementById("cart-count").textContent = total;
 }
 
 function renderCart() {
-  if (state.cart.length === 0) {
-    cartContainer.innerHTML = "<p>Cart is empty</p>";
+  const container = document.getElementById("cart-container");
+
+  if (cart.length === 0) {
+    container.innerHTML = "<p>Your cart is empty</p>";
     return;
   }
 
   let total = 0;
   let html = "";
 
-  state.cart.forEach(item => {
-    const product = state.products.find(p=>p.id===item.id);
+  cart.forEach(item => {
+    const product = PRODUCTS.find(p => p.id === item.id);
     const itemTotal = product.price * item.qty;
     total += itemTotal;
 
     html += `
-      <div class="card">
-        <p>${product.name}</p>
+      <div class="product-card">
+        <h3>${product.name}</h3>
         <p>${item.qty} × ₹${product.price}</p>
       </div>
     `;
   });
 
   html += `<h3>Total: ₹${total}</h3>`;
-  cartContainer.innerHTML = html;
+
+  container.innerHTML = html;
 }
 
-/* DARK MODE */
-function applyTheme(theme) {
-  document.body.classList.toggle("dark", theme === "dark");
-}
+/* SEARCH */
+document.getElementById("search-input").addEventListener("input", function () {
+  const value = this.value.toLowerCase();
+  const cards = document.querySelectorAll(".product-card");
 
-themeToggle.onclick = () => {
-  const current = localStorage.getItem(THEME_KEY) || "light";
-  const next = current === "light" ? "dark" : "light";
-  localStorage.setItem(THEME_KEY, next);
-  applyTheme(next);
-};
-
-applyTheme(localStorage.getItem(THEME_KEY) || "light");
-
-/* SEARCH + SORT */
-document.addEventListener("input", e => {
-  if (e.target.id === "search-input") renderProducts();
-});
-document.addEventListener("change", e => {
-  if (e.target.id === "sort-select") renderProducts();
+  cards.forEach(card => {
+    const name = card.querySelector("h3").innerText.toLowerCase();
+    card.style.display = name.includes(value) ? "block" : "none";
+  });
 });
 
 /* INIT */
-function init() {
-  renderProducts();
-  updateCartCount();
-  route();
-}
-init();
+renderProducts();
+updateCartCount();
+showPage();
